@@ -1,0 +1,23 @@
+
+Comprimir el proyecto: 
+
+Paso 1 - Entrar a la ruta del proyecto /var/www solo hasta acá ya que en /html se aloja el proyecto.
+
+Comando: cd /var/www
+tar -czvf /home/ec2-user/respaldo_proyecto_21-03-2026.tar.gz html
+
+Validar que se haya creado: ls -lh /home/ec2-user/respaldo_proyecto_21-03-2026.tar.gz  
+
+Paso 2:
+Comando para descargar el respaldo en Windows: cd C:\Users\Felipe\Downloads
+.\pscp.exe -i "C:\Users\Felipe\Documents\Clave-proyecto.ppk" ec2-user@IP-PUBLICA:/home/ec2-user/respaldo_proyecto_21-03-2026.tar.gz .
+
+Paso 3 - Respaldar la BD (pedira la clave de la bd):
+
+mysqldump -u monitor_user -p monitoreo_web > /home/ec2-user/respaldo_bd_monitoreo_21-03-2026.sql
+
+Paso 4 - Bajar la BD en Windows
+
+cd C:\Users\Felipe\Downloads
+.\pscp.exe -i "C:\Users\Felipe\Documents\Clave-proyecto.ppk" ec2-user@18.223.118.208:/home/ec2-user/respaldo_bd_monitoreo_21-03-2026.sql .
+
