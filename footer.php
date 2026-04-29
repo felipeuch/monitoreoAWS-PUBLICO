@@ -56,9 +56,6 @@ iaFloatButton.addEventListener("click", function () {
 iaCloseButton.addEventListener("click", function () {
     iaFloatPanel.classList.remove("active");
 });
-    iaCloseButton.addEventListener("click", function () {
-        iaFloatPanel.style.display = "none";
-    });
 
     function agregarMensajeFlotante(mensaje, tipo = "assistant", temporal = false) {
         const div = document.createElement("div");
