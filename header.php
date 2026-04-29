@@ -52,6 +52,7 @@ function claseMenuActiva($archivo, $pagina_actual) {
                 <a href="bitacora.php"<?php echo claseMenuActiva("bitacora.php", $pagina_actual); ?>>Bitácora</a>
                 <a href="monitorear.php"<?php echo claseMenuActiva("monitorear.php", $pagina_actual); ?>>Revisión</a>
                 <a href="resumenes_diarios.php"<?php echo claseMenuActiva("resumenes_diarios.php", $pagina_actual); ?>>Resumen diario</a>
+		<a href="asistente_ia.php">Asistente IA</a>
                 <a href="logout.php" class="btn btn-secondary btn-logout">Salir</a>
             </div>
         </div>
