@@ -1,6 +1,16 @@
 <div class="ia-float-wrapper">
-    <button id="iaFloatButton" class="ia-float-button" title="Asistente IA">
-        IA
+    <button id="iaFloatButton" class="ia-float-button" title="Asistente IA" aria-label="Abrir asistente IA">
+        <span class="ia-bot-orbit" aria-hidden="true"></span>
+        <span class="ia-bot-face" aria-hidden="true">
+            <span class="ia-bot-antenna"></span>
+            <span class="ia-bot-eyes">
+                <span></span>
+                <span></span>
+            </span>
+            <span class="ia-bot-mouth"></span>
+            <span class="ia-bot-scan"></span>
+        </span>
+        <span class="ia-bot-label">AI</span>
     </button>
 
 	<div id="iaFloatPanel" class="ia-float-panel">
