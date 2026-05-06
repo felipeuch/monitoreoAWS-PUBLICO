@@ -16,6 +16,7 @@ function claseMenuActiva($archivo, $pagina_actual) {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Cloud Monitoring</title>
+    <link rel="icon" type="image/svg+xml" href="img/favicon.svg">
     <link rel="stylesheet" href="estilos.css">
     <?php if (isset($extra_css)) { ?>
        <link rel="stylesheet" href="<?php echo $extra_css; ?>">
