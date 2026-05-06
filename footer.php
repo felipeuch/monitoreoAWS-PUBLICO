@@ -23,15 +23,29 @@
         </div>
 
         <div class="ia-float-quick">
-            <button type="button" onclick="enviarPreguntaFlotante('Dame un resumen de la actividad reciente del sistema.')">Resumen</button>
-            <button type="button" onclick="enviarPreguntaFlotante('¿Qué equipos están inactivos actualmente?')">Inactivos</button>
-            <button type="button" onclick="enviarPreguntaFlotante('¿Qué cambios de estado recientes hubo en el sistema?')">Cambios</button>
-        </div>
-
-        <div id="iaFloatMessages" class="ia-float-messages">
-            <div class="ia-float-msg ia-float-msg-assistant">
-                Hola, puedo ayudarte con resúmenes, cambios recientes y estado actual.
+            <div class="ia-float-quick">
+                <button type="button" onclick="enviarPreguntaFlotante('Dame un resumen de la actividad reciente del sistema.')">Resumen</button>
+                <button type="button" onclick="enviarPreguntaFlotante('¿Qué equipos están inactivos actualmente?')">Inactivos</button>
+                <button type="button" onclick="enviarPreguntaFlotante('¿Qué cambios de estado recientes hubo en el sistema?')">Cambios</button>
             </div>
+            <div id="iaFloatMessages" class="ia-float-messages">
+    <div class="ia-float-msg ia-float-msg-assistant">
+        Bienvenido, administrador. Soy Nexa IA, tu asistente inteligente de monitoreo y estoy encantada de ayudarte.
+
+        Puedo apoyarte con:
+        - un resumen de la actividad reciente
+        - equipos inactivos
+        - cambios de estado detectados
+        - actividad administrativa del sistema
+        - estado general de la plataforma
+
+        Mis sugerencias para hoy son:
+        - Resumen reciente
+        - Equipos inactivos
+        - Cambios recientes
+        - Actividad administrativa
+    </div>
+</div>
         </div>
 
         <form id="iaFloatForm" class="ia-float-form">

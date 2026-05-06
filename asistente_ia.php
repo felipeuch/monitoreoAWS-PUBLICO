@@ -21,7 +21,22 @@ include("header.php");
             <div class="soft-box">
                 <strong>Asistente IA:</strong>
                 <p style="margin-top: 8px;">
-                    Hola, puedo ayudarte con resúmenes del monitoreo, cambios de estado, actividad reciente y estado actual del sistema.
+                   <div class="ia-float-msg ia-float-msg-assistant">
+    Bienvenido, administrador. Soy Nexa IA, tu asistente inteligente de monitoreo y estoy encantada de ayudarte.
+
+    Puedo apoyarte con:
+    - un resumen de la actividad reciente
+    - equipos inactivos
+    - cambios de estado detectados
+    - actividad administrativa del sistema
+    - estado general de la plataforma
+
+    Mis sugerencias para hoy son:
+    - Resumen reciente
+    - Equipos inactivos
+    - Cambios recientes
+    - Actividad administrativa
+</div>
                 </p>
             </div>
         </div>
