@@ -16,10 +16,8 @@ $descripcion = "";
 $metricas_habilitadas = 0;
 $instancia_metricas = "";
 
-$ip_prellenada = "";
-
-if (isset($_GET["ip"])) {
-    $ip_prellenada = $_GET["ip"];
+if (isset($_GET["ip"]) && $_GET["ip"] !== "") {
+    $ip = trim($_GET["ip"]);
 }
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
@@ -147,8 +145,7 @@ include("header.php");
                 <input type="text" name="nombre" required value="<?php echo htmlspecialchars($nombre); ?>" placeholder="Ejemplo: Servidor principal">
 
                 <label>Dirección IP</label>
-                <input type="text" name="ip" required value="<?php echo htmlspecialchars($ip); ?>" placeholder="Ejemplo: 172.31.46.87">
-
+                <input type="text" name="ip" required value="<?php echo htmlspecialchars($ip); ?>" placeholder="Ejemplo: 172.31.46.87" <?php echo isset($_GET["ip"]) && $_GET["ip"] !== "" ? "readonly" : ""; ?>>
                 <label>Ubicación</label>
                 <input type="text" name="ubicacion" value="<?php echo htmlspecialchars($ubicacion); ?>" placeholder="Ejemplo:Sala de servidores">
 
