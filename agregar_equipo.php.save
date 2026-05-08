@@ -1,0 +1,109 @@
+<?php
+include("conexion.php");
+include("verificar_sesion.php");
+$mensaje = "";
+
+$ip_prellenada = "";
+
+if (isset($_GET["ip"])) {
+    $ip_prellenada = $_GET["ip"];
+}
+
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    $nombre = $_POST["nombre"];
+    $ip = $_POST["ip"];
+    $ubicacion = $_POST["ubicacion"];
+    $tipo = $_POST["tipo"];
+    $sistema_operativo = $_POST["sistema_operativo"];
+    $descripcion = $_POST["descripcion"];
+        
+
+    $sql = "INSERT INTO equipos (nombre, ip, ubicacion, tipo, sistema_operativo, descripcion)
+            VALUES ('$nombre', '$ip', '$ubicacion', '$tipo', '$sistema_operativo', '$descripcion')";
+
+    if ($conn->query($sql) === TRUE) {
+        $mensaje = "Equipo agregado correctamente.";
+    } else {
+        $mensaje = "Error: " . $conn->error;
+    }
+}
+
+include("header.php");
+?>
+
+<div class="page-card">
+    <h1 class="page-title">Registro de equipos</h1>
+    <p class="page-subtitle">
+        Ingresa la información base del activo tecnológico para incorporarlo al inventario
+        y habilitar futuras revisiones de monitoreo dentro de la plataforma.
+    </p>
+
+    <div class="actions">
+        <a href="listar_equipos.php" class="btn btn-secondary">Ver equipos registrados</a>
+        <a href="index.php" class="btn btn-secondary">Volver al inicio</a>
+    </div>
+
+    <?php if (!empty($mensaje)): ?>
+        <div class="message"><?php echo $mensaje; ?></div>
+    <?php endif; ?>
+
+    <div class="form-layout">
+        <div class="page-card">
+            <h2 class="form-section-title">Formulario de ingreso</h2>
+            <p class="page-note" style="margin-bottom: 18px;">
+                Completa los siguientes datos para registrar un nuevo dispositivo dentro del sistema.
+            </p>
+
+            <div class="form-divider"></div>
+
+            <form method="POST" action="">
+                <label>Nombre del equipo</label>
+                <input type="text" name="nombre" required>
+
+                <label>Dirección IP</label>
+                <input type="text" name="ip" required value="<?php echo htmlspecialchars($ip_prellenada); ?>">
+
+                <label>Ubicación</label>
+                <input type="text" name="ubicacion" placeholder="Ejemplo: Laboratorio 1">
+
+                <label>Tipo de equipo</label>
+                <input type="text" name="tipo" placeholder="Ejemplo: PC, Servidor, Router">
+
+                <label>Sistema operativo</label>
+                <input type="text" name="sistema_operativo" placeholder="Ejemplo: Windows 10, Ubuntu, Amazon Linux">
+
+                <label>Descripción</label>
+                <textarea name="descripcion" placeholder="Escribe una breve descripción del equipo o su función dentro de la red"></textarea>
+
+                <button type="submit" class="btn btn-primary">Guardar equipo</button>
+            </form>
+        </div>
+
+        <div class="info-card">
+            <h3>Recomendaciones de registro</h3>
+            <p>
+                Mantener un registro ordenado y consistente mejora la calidad del inventario y facilita
+                el análisis posterior dentro del sistema de monitoreo.
+            </p>
+
+            <ul>
+                <li>Usa nombres claros y fáciles de identificar.</li>
+                <li>Registra IPs válidas y revisables por la plataforma.</li>
+                <li>Especifica la ubicación física o lógica del equipo.</li>
+                <li>Describe brevemente la función del dispositivo.</li>
+                <li>Mantén consistencia en los tipos y sistemas operativos.</li>
+            </ul>
+
+            <div class="form-divider"></div>
+
+            <h3>Uso dentro del proyecto</h3>
+            <p>
+                Cada equipo registrado podrá formar parte del inventario institucional y ser incorporado
+                a futuras ejecuciones de monitoreo, permitiendo construir una visión centralizada de los
+                activos tecnológicos supervisados.
+            </p>
+        </div>
+    </div>
+</div>
+
+<?php include("footer.php"); ?>
