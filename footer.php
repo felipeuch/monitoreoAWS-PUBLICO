@@ -25,8 +25,10 @@
         <div class="ia-float-quick">
             <div class="ia-float-quick">
                 <button type="button" onclick="enviarPreguntaFlotante('Dame un resumen de la actividad reciente del sistema.')">Resumen</button>
+                <button type="button" onclick="enviarPreguntaFlotante('¿Qué equipos están activos actualmente?')">Activos</button>
                 <button type="button" onclick="enviarPreguntaFlotante('¿Qué equipos están inactivos actualmente?')">Inactivos</button>
                 <button type="button" onclick="enviarPreguntaFlotante('¿Qué cambios de estado recientes hubo en el sistema?')">Cambios</button>
+                <button type="button" onclick="enviarPreguntaFlotante('Muéstrame los equipos con métricas disponibles para revisar.')">Métricas</button>
             </div>
             <div id="iaFloatMessages" class="ia-float-messages">
     <div class="ia-float-msg ia-float-msg-assistant">
@@ -99,6 +101,7 @@ iaCloseButton.addEventListener("click", function () {
         iaFloatInput.value = texto;
         iaFloatForm.dispatchEvent(new Event("submit"));
     };
+
 
     iaFloatForm.addEventListener("submit", async function (e) {
         e.preventDefault();

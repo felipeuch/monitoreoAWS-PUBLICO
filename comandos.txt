@@ -21,3 +21,6 @@ Paso 4 - Bajar la BD en Windows
 cd C:\Users\Felipe\Downloads
 .\pscp.exe -i "C:\Users\Felipe\Documents\Clave-proyecto.ppk" ec2-user@18.223.118.208:/home/ec2-user/respaldo_bd_monitoreo_21-03-2026.sql .
 
+ENTRAR A BASE DE DATOS RDS
+
+mysql -h monitoreo-web-db.cviu6wa0qj18.us-east-2.rds.amazonaws.com -u admin -p --ssl-ca=/var/www/ssl/global-bundle.pem

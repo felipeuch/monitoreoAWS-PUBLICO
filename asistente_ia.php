@@ -11,9 +11,11 @@ include("header.php");
 
     <div class="actions" style="margin-bottom: 20px;">
         <button class="btn btn-secondary" onclick="enviarPreguntaRapida('Dame un resumen de la actividad reciente del sistema.')">Resumen reciente</button>
+        <button class="btn btn-secondary" onclick="enviarPreguntaRapida('¿Qué equipos están activos actualmente?')">Equipos activos</button>
         <button class="btn btn-secondary" onclick="enviarPreguntaRapida('¿Qué equipos están inactivos actualmente?')">Equipos inactivos</button>
         <button class="btn btn-secondary" onclick="enviarPreguntaRapida('¿Qué cambios de estado recientes hubo en el sistema?')">Cambios recientes</button>
         <button class="btn btn-secondary" onclick="enviarPreguntaRapida('¿Qué actividad administrativa reciente se registró?')">Actividad administrativa</button>
+        <button class="btn btn-secondary" onclick="enviarPreguntaRapida('Muéstrame los equipos con métricas disponibles para revisar.')">Métricas</button>
     </div>
 
     <div class="page-card" style="background: rgba(15, 23, 42, 0.65); margin-bottom: 20px;">
@@ -77,6 +79,8 @@ function enviarPreguntaRapida(texto) {
     preguntaInput.value = texto;
     formAsistente.dispatchEvent(new Event("submit"));
 }
+
+
 
 formAsistente.addEventListener("submit", async function(e) {
     e.preventDefault();
