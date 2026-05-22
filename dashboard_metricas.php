@@ -94,7 +94,7 @@ include("header.php");
         </div>
 
         <div class="actions">
-            <a href="http://18.191.9.55:3000" target="_blank" class="btn btn-primary">Abrir Grafana</a>
+            <a href="http://3.133.87.154:3000" target="_blank" class="btn btn-primary">Abrir Grafana</a>
             <a href="listar_equipos.php" class="btn btn-secondary">Volver a equipos</a>
             <a href="index.php" class="btn btn-secondary">Ir al inicio</a>
         </div>
