@@ -25,7 +25,7 @@ function claseMenuActiva($archivo, $pagina_actual) {
 </head>
 <body>
 
-<header>
+<header class="site-sidebar">
     <div class="container">
         <div class="nav">
             <div class="brand">
@@ -44,6 +44,12 @@ function claseMenuActiva($archivo, $pagina_actual) {
                 </div>
             </div>
 
+            <input type="checkbox" id="sidebarMenuToggle" class="sidebar-toggle-input" aria-hidden="true">
+            <label for="sidebarMenuToggle" class="sidebar-toggle">
+                <span class="sidebar-toggle-icon" aria-hidden="true"></span>
+                <span>Menu</span>
+            </label>
+
             <div class="menu">
                 <a href="index.php"<?php echo claseMenuActiva("index.php", $pagina_actual); ?>>Inicio</a>
                 <a href="agregar_equipo.php"<?php echo claseMenuActiva("agregar_equipo.php", $pagina_actual); ?>>Agregar equipo</a>
@@ -53,7 +59,7 @@ function claseMenuActiva($archivo, $pagina_actual) {
                 <a href="bitacora.php"<?php echo claseMenuActiva("bitacora.php", $pagina_actual); ?>>Bitácora</a>
                 <a href="monitorear.php"<?php echo claseMenuActiva("monitorear.php", $pagina_actual); ?>>Revisión</a>
                 <a href="resumenes_diarios.php"<?php echo claseMenuActiva("resumenes_diarios.php", $pagina_actual); ?>>Resumen diario</a>
-		<a href="asistente_ia.php">Asistente IA</a>
+                <a href="asistente_ia.php"<?php echo claseMenuActiva("asistente_ia.php", $pagina_actual); ?>>Asistente IA</a>
                 <a href="logout.php" class="btn btn-secondary btn-logout">Salir</a>
             </div>
         </div>
