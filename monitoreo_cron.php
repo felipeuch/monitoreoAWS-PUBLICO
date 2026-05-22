@@ -1,6 +1,7 @@
 <?php
 include(__DIR__ . "/conexion.php");
 include(__DIR__ . "/sns_alerta.php");
+include(__DIR__ . "/notificaciones_funciones.php");
 
 $sql = "SELECT * FROM equipos";
 $resultado = $conn->query($sql);
@@ -69,6 +70,26 @@ if ($resultado && $resultado->num_rows > 0) {
         $mensaje .= "----------------------------------------\n\n";
         $mensaje .= "Este aviso fue generado automáticamente por Cloud Monitoring.";
             enviarAlertaSNS($asunto, $mensaje);
+            
+            $nivel_notificacion = ($estado === "Inactivo") ? "Advertencia" : "Info";
+
+            $titulo_notificacion = "Cambio de estado: $nombre";
+
+            $mensaje_notificacion = "El equipo $nombre cambió de estado.\n";
+            $mensaje_notificacion .= "Estado anterior: " . ($ultimo_estado === null ? "Sin registro previo" : $ultimo_estado) . "\n";
+            $mensaje_notificacion .= "Estado actual: $estado\n";
+            $mensaje_notificacion .= "IP: $ip\n";
+            $mensaje_notificacion .= "Fecha y hora: $ultimo_chequeo";
+
+            registrarNotificacion(
+                $conn,
+                "ESTADO_EQUIPO",
+                $titulo_notificacion,
+                $mensaje_notificacion,
+                $nivel_notificacion,
+                "Monitoreo",
+                $equipo_id
+            );
         }
     }
 

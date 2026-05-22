@@ -1,6 +1,7 @@
 <?php
 include("conexion.php");
 include("sns_alerta.php");
+include("notificaciones_funciones.php");
 
 $prometheus = "http://localhost:9090";
 
@@ -123,6 +124,36 @@ while ($equipo = $res->fetch_assoc()) {
 
             registrarAlertaMetrica($conn, $equipo_id, $nombre, $ip, "CPU", $cpu, $UMBRAL_CPU, "Crítico", $mensaje);
             enviarAlertaSNS($asunto, $mensaje);
+
+            registrarNotificacion(
+                $conn,
+                "METRICA",
+                "CPU elevada en $nombre",
+                "El equipo $nombre presenta CPU elevada con $cpu%. Umbral configurado: $UMBRAL_CPU%.",
+                "Critico",
+                "Metricas",
+                $equipo_id
+            );
+
+            registrarNotificacion(
+                $conn,
+                "METRICA",
+                "RAM elevada en $nombre",
+                "El equipo $nombre presenta RAM elevada con $ram%. Umbral configurado: $UMBRAL_RAM%.",
+                "Critico",
+                "Metricas",
+                $equipo_id
+            );
+
+            registrarNotificacion(
+                $conn,
+                "METRICA",
+                "Disco elevado en $nombre",
+                "El equipo $nombre presenta uso de disco de $disco%. Umbral configurado: $UMBRAL_DISCO%.",
+                "Advertencia",
+                "Metricas",
+                $equipo_id
+            );
 
             echo "Alerta CPU enviada por SNS.\n";
         } else {

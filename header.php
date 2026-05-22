@@ -18,6 +18,7 @@ function claseMenuActiva($archivo, $pagina_actual) {
     <title>Cloud Monitoring</title>
     <link rel="icon" type="image/svg+xml" href="img/favicon.svg">
     <link rel="stylesheet" href="estilos.css">
+    <link rel="stylesheet" href="campana.css">
     <?php if (isset($extra_css)) { ?>
        <link rel="stylesheet" href="<?php echo $extra_css; ?>">
     <?php } ?>

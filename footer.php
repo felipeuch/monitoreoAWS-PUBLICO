@@ -60,6 +60,28 @@
     </div>
 </div>
 
+<div class="notificaciones-wrapper">
+    <button id="btnNotificaciones" class="notificaciones-btn" type="button" title="Notificaciones">
+        <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+            <path d="M18 8A6 6 0 0 0 6 8c0 7-3 7-3 9h18c0-2-3-2-3-9"></path>
+            <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
+        </svg>
+        <span id="contadorNotificaciones" class="notificaciones-contador" style="display:none;">0</span>
+    </button>
+
+    <div id="panelNotificaciones" class="notificaciones-panel" style="display:none;">
+        <div class="notificaciones-header">
+            <strong>Notificaciones</strong>
+            <button id="marcarTodasLeidas" type="button">Marcar leídas</button>
+        </div>
+
+        <div id="listaNotificaciones" class="notificaciones-lista">
+            <p style="padding:14px;">Cargando...</p>
+        </div>
+    </div>
+</div>
+
+
 <footer>
     <div class="container">
         <p>Cloud Monitoring © <?php echo date("Y"); ?> - Proyecto de monitoreo en AWS</p>
@@ -74,34 +96,42 @@ const iaFloatForm = document.getElementById("iaFloatForm");
 const iaFloatInput = document.getElementById("iaFloatInput");
 const iaFloatMessages = document.getElementById("iaFloatMessages");
 
+/* =========================
+   BURBUJA FLOTANTE IA
+========================= */
 if (iaFloatButton && iaFloatPanel && iaCloseButton && iaFloatForm && iaFloatInput && iaFloatMessages) {
-iaFloatButton.addEventListener("click", function () {
-    iaFloatPanel.classList.toggle("active");
-});
+    iaFloatButton.addEventListener("click", function () {
+        iaFloatPanel.classList.toggle("active");
+    });
 
-iaCloseButton.addEventListener("click", function () {
-    iaFloatPanel.classList.remove("active");
-});
+    iaCloseButton.addEventListener("click", function () {
+        iaFloatPanel.classList.remove("active");
+    });
 
     function agregarMensajeFlotante(mensaje, tipo = "assistant", temporal = false) {
         const div = document.createElement("div");
         div.className = "ia-float-msg " + (tipo === "user" ? "ia-float-msg-user" : "ia-float-msg-assistant");
         div.textContent = mensaje;
-        if (temporal) div.dataset.temporal = "true";
+
+        if (temporal) {
+            div.dataset.temporal = "true";
+        }
+
         iaFloatMessages.appendChild(div);
         iaFloatMessages.scrollTop = iaFloatMessages.scrollHeight;
     }
 
     function removerTemporalFlotante() {
         const temporal = iaFloatMessages.querySelector('[data-temporal="true"]');
-        if (temporal) temporal.remove();
+        if (temporal) {
+            temporal.remove();
+        }
     }
 
     window.enviarPreguntaFlotante = function (texto) {
         iaFloatInput.value = texto;
         iaFloatForm.dispatchEvent(new Event("submit"));
     };
-
 
     iaFloatForm.addEventListener("submit", async function (e) {
         e.preventDefault();
@@ -136,6 +166,96 @@ iaCloseButton.addEventListener("click", function () {
         }
     });
 }
+
+/* =========================
+   CAMPANITA DE NOTIFICACIONES
+========================= */
+async function cargarNotificaciones() {
+    try {
+        const response = await fetch("obtener_notificaciones.php");
+        const data = await response.json();
+
+        const contador = document.getElementById("contadorNotificaciones");
+        const lista = document.getElementById("listaNotificaciones");
+
+        if (!contador || !lista) return;
+
+        if (data.total_no_leidas > 0) {
+            contador.textContent = data.total_no_leidas;
+            contador.style.display = "inline-block";
+        } else {
+            contador.style.display = "none";
+        }
+
+        if (!data.notificaciones || data.notificaciones.length === 0) {
+            lista.innerHTML = "<p class='notificaciones-empty'>No hay notificaciones.</p>";
+            return;
+        }
+
+        lista.innerHTML = "";
+
+        data.notificaciones.forEach(n => {
+            const item = document.createElement("div");
+            item.className = "notificacion-item " + (n.estado === "No leida" ? "no-leida" : "");
+
+            item.innerHTML = `
+                <div class="notificacion-titulo">${n.titulo}</div>
+                <div class="notificacion-mensaje">${n.mensaje}</div>
+                <div class="notificacion-meta">${n.nivel} · ${n.modulo ?? ""} · ${n.fecha_creacion}</div>
+            `;
+
+            lista.appendChild(item);
+        });
+    } catch (error) {
+        console.error("Error cargando notificaciones:", error);
+    }
+}
+
+const btnNotificaciones = document.getElementById("btnNotificaciones");
+const panelNotificaciones = document.getElementById("panelNotificaciones");
+
+if (btnNotificaciones && panelNotificaciones) {
+    btnNotificaciones.addEventListener("click", function () {
+        const visible = panelNotificaciones.classList.contains("abierto");
+
+        if (visible) {
+            panelNotificaciones.classList.remove("abierto");
+            btnNotificaciones.classList.remove("activo");
+            setTimeout(() => {
+                if (!panelNotificaciones.classList.contains("abierto")) {
+                    panelNotificaciones.style.display = "none";
+                }
+            }, 190);
+            return;
+        }
+
+        panelNotificaciones.style.display = "block";
+        requestAnimationFrame(() => {
+            panelNotificaciones.classList.add("abierto");
+            btnNotificaciones.classList.add("activo");
+        });
+        cargarNotificaciones();
+    });
+}
+
+const marcarTodasLeidas = document.getElementById("marcarTodasLeidas");
+
+if (marcarTodasLeidas) {
+    marcarTodasLeidas.addEventListener("click", async function () {
+        try {
+            await fetch("marcar_notificaciones_leidas.php", {
+                method: "POST"
+            });
+
+            cargarNotificaciones();
+        } catch (error) {
+            console.error("Error al marcar notificaciones como leídas:", error);
+        }
+    });
+}
+
+cargarNotificaciones();
+setInterval(cargarNotificaciones, 60000);
 </script>
 
 </body>
