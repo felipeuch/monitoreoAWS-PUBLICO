@@ -417,6 +417,23 @@ table td {
     overflow-wrap: anywhere;
 }
 
+.equipos-table .col-id,
+.equipos-table .col-ip {
+    white-space: nowrap;
+    word-break: normal;
+    overflow-wrap: normal;
+}
+
+.equipos-table .col-id {
+    width: 64px;
+    min-width: 64px;
+}
+
+.equipos-table .col-ip {
+    width: 118px;
+    min-width: 118px;
+}
+
 table tr:nth-child(even) td {
     background: rgba(255, 255, 255, 0.028);
 }

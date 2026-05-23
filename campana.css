@@ -122,17 +122,17 @@
     position: sticky;
     top: 0;
     z-index: 1;
-    padding: 16px;
+    padding: 14px 12px;
     border-bottom: 1px solid rgba(148, 163, 184, 0.2);
     display: flex;
-    gap: 14px;
+    gap: 12px;
     align-items: center;
     background: linear-gradient(180deg, rgba(15, 23, 42, 0.98), rgba(15, 23, 42, 0.88));
     backdrop-filter: blur(14px);
 }
 
 .notificaciones-header strong {
-    font-size: 15px;
+    font-size: 14px;
     letter-spacing: 0;
     white-space: nowrap;
 }
@@ -148,7 +148,8 @@
 
 .notificaciones-header button {
     border: none;
-    width: 96px;
+    width: auto;
+    min-width: 96px;
     min-height: 38px;
     display: inline-flex;
     align-items: center;
@@ -162,7 +163,12 @@
     font-weight: 700;
     line-height: 1.1;
     text-align: center;
+    white-space: nowrap;
     transition: background 160ms ease, color 160ms ease, transform 160ms ease;
+}
+
+#eliminarLeidas {
+    min-width: 108px;
 }
 
 .notificaciones-header button:hover {

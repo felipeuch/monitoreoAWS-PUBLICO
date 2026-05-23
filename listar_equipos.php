@@ -178,11 +178,11 @@ include("header.php");
     </div>
 
     <div class="table-wrapper">
-        <table>
+        <table class="equipos-table">
             <tr>
-                <th>ID</th>
+                <th class="col-id">ID</th>
                 <th>Nombre</th>
-                <th>IP</th>
+                <th class="col-ip">IP</th>
                 <th>Ubicación</th>
                 <th>Tipo</th>
                 <th>Sistema Operativo</th>
@@ -210,9 +210,9 @@ include("header.php");
                     }
 
                     echo "<tr data-equipo-id='" . $fila["id"] . "' data-equipo-nombre='" . htmlspecialchars($fila["nombre"], ENT_QUOTES) . "'>";
-                    echo "<td>" . $fila["id"] . "</td>";
+                    echo "<td class='col-id'>" . $fila["id"] . "</td>";
                     echo "<td><span class='highlight-value'>" . htmlspecialchars($fila["nombre"]) . "</span></td>";
-                    echo "<td>" . htmlspecialchars($fila["ip"]) . "</td>";
+                    echo "<td class='col-ip'>" . htmlspecialchars($fila["ip"]) . "</td>";
                     echo "<td>" . htmlspecialchars($fila["ubicacion"]) . "</td>";
                     echo "<td>" . htmlspecialchars($fila["tipo"]) . "</td>";
                     echo "<td>" . htmlspecialchars($fila["sistema_operativo"]) . "</td>";
