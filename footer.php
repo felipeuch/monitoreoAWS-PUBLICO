@@ -72,8 +72,10 @@
     <div id="panelNotificaciones" class="notificaciones-panel" style="display:none;">
         <div class="notificaciones-header">
             <strong>Notificaciones</strong>
-            <button id="marcarTodasLeidas" type="button">Marcar leídas</button>
-            <button id="eliminarLeidas" type="button">Eliminar leídas</button>
+            <div class="notificaciones-header-actions">
+                <button id="marcarTodasLeidas" type="button">Marcar leídas</button>
+                <button id="eliminarLeidas" type="button">Eliminar leídas</button>
+            </div>
         </div>
 
         <div id="listaNotificaciones" class="notificaciones-lista">
@@ -198,11 +200,23 @@ async function cargarNotificaciones() {
         data.notificaciones.forEach(n => {
             const item = document.createElement("div");
             item.className = "notificacion-item " + (n.estado === "No leida" ? "no-leida" : "");
+            item.dataset.notificacionId = n.id;
 
             item.innerHTML = `
-                <div class="notificacion-titulo">${n.titulo}</div>
-                <div class="notificacion-mensaje">${n.mensaje}</div>
-                <div class="notificacion-meta">${n.nivel} · ${n.modulo ?? ""} · ${n.fecha_creacion}</div>
+                <button class="notificacion-eliminar" type="button" title="Eliminar notificación" aria-label="Eliminar notificación" data-id="${n.id}">
+                    <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                        <path d="M3 6h18"></path>
+                        <path d="M8 6V4h8v2"></path>
+                        <path d="M19 6l-1 14H6L5 6"></path>
+                        <path d="M10 11v5"></path>
+                        <path d="M14 11v5"></path>
+                    </svg>
+                </button>
+                <div class="notificacion-contenido">
+                    <div class="notificacion-titulo">${n.titulo}</div>
+                    <div class="notificacion-mensaje">${n.mensaje}</div>
+                    <div class="notificacion-meta">${n.nivel} · ${n.modulo ?? ""} · ${n.fecha_creacion}</div>
+                </div>
             `;
 
             lista.appendChild(item);
@@ -212,8 +226,36 @@ async function cargarNotificaciones() {
     }
 }
 
+async function eliminarNotificacionIndividual(id, item) {
+    if (!id || !item) return;
+
+    item.classList.add("eliminando");
+
+    try {
+        const response = await fetch("eliminar_notificacion.php", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/x-www-form-urlencoded"
+            },
+            body: "id=" + encodeURIComponent(id)
+        });
+        const data = await response.json();
+
+        if (!data.ok) {
+            item.classList.remove("eliminando");
+            return;
+        }
+
+        setTimeout(cargarNotificaciones, 170);
+    } catch (error) {
+        item.classList.remove("eliminando");
+        console.error("Error al eliminar notificación:", error);
+    }
+}
+
 const btnNotificaciones = document.getElementById("btnNotificaciones");
 const panelNotificaciones = document.getElementById("panelNotificaciones");
+const listaNotificaciones = document.getElementById("listaNotificaciones");
 
 if (btnNotificaciones && panelNotificaciones) {
     btnNotificaciones.addEventListener("click", function () {
@@ -239,6 +281,19 @@ if (btnNotificaciones && panelNotificaciones) {
     });
 }
 
+if (listaNotificaciones) {
+    listaNotificaciones.addEventListener("click", function (event) {
+        const botonEliminar = event.target.closest(".notificacion-eliminar");
+        if (!botonEliminar) return;
+
+        event.preventDefault();
+        event.stopPropagation();
+
+        const item = botonEliminar.closest(".notificacion-item");
+        eliminarNotificacionIndividual(botonEliminar.dataset.id, item);
+    });
+}
+
 const marcarTodasLeidas = document.getElementById("marcarTodasLeidas");
 
 if (marcarTodasLeidas) {
@@ -260,17 +315,43 @@ const eliminarLeidas = document.getElementById("eliminarLeidas");
 
 if (eliminarLeidas) {
     eliminarLeidas.addEventListener("click", async function () {
-        const confirmar = confirm("¿Eliminar todas las notificaciones leídas?");
+        const resultado = await Swal.fire({
+            title: "Eliminar notificaciones leídas",
+            text: "Se eliminarán todas las notificaciones que ya fueron marcadas como leídas.",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonText: "Eliminar leídas",
+            cancelButtonText: "Cancelar",
+            reverseButtons: true,
+            confirmButtonColor: "#dc2626",
+            cancelButtonColor: "#334155",
+            background: "#0f172a",
+            color: "#e5e7eb"
+        });
 
-        if (!confirmar) {
+        if (!resultado.isConfirmed) {
             return;
         }
 
         try {
-            await fetch("eliminar_notificaciones_leidas.php", {
+            const response = await fetch("eliminar_notificaciones_leidas.php", {
                 method: "POST"
             });
+            const data = await response.json();
 
+            if (!data.ok) {
+                return;
+            }
+
+            Swal.fire({
+                toast: true,
+                position: "top-start",
+                icon: "success",
+                title: "Notificaciones leídas eliminadas",
+                showConfirmButton: false,
+                timer: 2400,
+                timerProgressBar: true
+            });
             cargarNotificaciones();
         } catch (error) {
             console.error("Error al eliminar notificaciones leídas:", error);

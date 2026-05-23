@@ -266,8 +266,19 @@ function mostrarToastCambio(nombre, estado) {
         icon: estado === 'Activo' ? 'success' : 'warning',
         title: `${nombre} ahora está ${estado}`,
         showConfirmButton: false,
-        timer: 3500,
-        timerProgressBar: true
+        showCloseButton: true,
+        timer: 8000,
+        timerProgressBar: true,
+        customClass: {
+            container: 'estado-toast-container',
+            popup: `estado-toast ${estado === 'Activo' ? 'estado-toast-activo' : 'estado-toast-inactivo'}`
+        },
+        showClass: {
+            popup: 'estado-toast-entrada'
+        },
+        hideClass: {
+            popup: 'estado-toast-salida'
+        }
     });
 }
 
