@@ -73,6 +73,7 @@
         <div class="notificaciones-header">
             <strong>Notificaciones</strong>
             <button id="marcarTodasLeidas" type="button">Marcar leídas</button>
+            <button id="eliminarLeidas" type="button">Eliminar leídas</button>
         </div>
 
         <div id="listaNotificaciones" class="notificaciones-lista">
@@ -253,6 +254,31 @@ if (marcarTodasLeidas) {
         }
     });
 }
+
+
+const eliminarLeidas = document.getElementById("eliminarLeidas");
+
+if (eliminarLeidas) {
+    eliminarLeidas.addEventListener("click", async function () {
+        const confirmar = confirm("¿Eliminar todas las notificaciones leídas?");
+
+        if (!confirmar) {
+            return;
+        }
+
+        try {
+            await fetch("eliminar_notificaciones_leidas.php", {
+                method: "POST"
+            });
+
+            cargarNotificaciones();
+        } catch (error) {
+            console.error("Error al eliminar notificaciones leídas:", error);
+        }
+    });
+}
+
+
 
 cargarNotificaciones();
 setInterval(cargarNotificaciones, 60000);
