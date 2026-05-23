@@ -246,7 +246,16 @@ async function eliminarNotificacionIndividual(id, item) {
             return;
         }
 
-        setTimeout(cargarNotificaciones, 170);
+        setTimeout(() => {
+            item.remove();
+            const quedanItems = listaNotificaciones ? listaNotificaciones.querySelector(".notificacion-item") : null;
+
+            if (!quedanItems && listaNotificaciones) {
+                listaNotificaciones.innerHTML = "<p class='notificaciones-empty'>No hay notificaciones.</p>";
+            }
+
+            cargarNotificaciones();
+        }, 180);
     } catch (error) {
         item.classList.remove("eliminando");
         console.error("Error al eliminar notificación:", error);
@@ -344,13 +353,14 @@ if (eliminarLeidas) {
             }
 
             Swal.fire({
-                toast: true,
-                position: "top-start",
+                position: "center",
                 icon: "success",
                 title: "Notificaciones leídas eliminadas",
                 showConfirmButton: false,
-                timer: 2400,
-                timerProgressBar: true
+                timer: 1700,
+                timerProgressBar: true,
+                background: "#0f172a",
+                color: "#e5e7eb"
             });
             cargarNotificaciones();
         } catch (error) {
