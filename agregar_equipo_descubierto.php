@@ -6,7 +6,15 @@ if (!isset($_GET["ip"])) {
     exit();
 }
 
-$ip = $_GET["ip"];
-header("Location: agregar_equipo.php?ip=" . urlencode($ip));
+$ip = trim($_GET["ip"]);
+$nombre = isset($_GET["nombre"]) ? trim($_GET["nombre"]) : "";
+
+$url = "agregar_equipo.php?ip=" . urlencode($ip);
+
+if ($nombre !== "" && $nombre !== "No detectado") {
+    $url .= "&nombre=" . urlencode($nombre);
+}
+
+header("Location: " . $url);
 exit();
 ?>
