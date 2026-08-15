@@ -31,3 +31,12 @@ prueba.php
 # Archivos de sistema
 .DS_Store
 Thumbs.db
+
+# Archivos internos adicionales
+comandos.txt
+.env.*
+*.p12
+*.pfx
+*.ppk
+*.tgz
+*.7z
