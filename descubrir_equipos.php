@@ -2,8 +2,71 @@
 include("verificar_sesion.php");
 include("conexion.php");
 
+require __DIR__ . '/vendor/autoload.php';
+
+use Aws\Ec2\Ec2Client;
+
 $rango = "";
 $resultados = [];
+
+/* =========================
+   FUNCIÓN: OBTENER NOMBRE AWS POR IP PRIVADA
+========================= */
+function obtenerNombreEC2PorIP($ip) {
+    try {
+        $ec2 = new Ec2Client([
+            'version' => 'latest',
+            'region'  => 'us-east-2'
+        ]);
+
+        $result = $ec2->describeInstances([
+            'Filters' => [
+                [
+                    'Name' => 'private-ip-address',
+                    'Values' => [$ip]
+                ]
+            ]
+        ]);
+
+        foreach ($result['Reservations'] as $reservation) {
+            foreach ($reservation['Instances'] as $instance) {
+                if (!empty($instance['Tags'])) {
+                    foreach ($instance['Tags'] as $tag) {
+                        if ($tag['Key'] === 'Name') {
+                            return $tag['Value'];
+                        }
+                    }
+                }
+            }
+        }
+
+        return null;
+    } catch (Exception $e) {
+        return null;
+    }
+}
+
+/* =========================
+   FUNCIÓN: OBTENER NOMBRE DETECTADO
+   1. Primero intenta AWS EC2 Tag Name
+   2. Luego intenta DNS inverso
+   3. Si no encuentra, muestra No detectado
+========================= */
+function obtenerNombreDetectado($ip) {
+    $nombre_aws = obtenerNombreEC2PorIP($ip);
+
+    if (!empty($nombre_aws)) {
+        return $nombre_aws;
+    }
+
+    $nombre_dns = gethostbyaddr($ip);
+
+    if ($nombre_dns && $nombre_dns !== $ip) {
+        return $nombre_dns;
+    }
+
+    return "No detectado";
+}
 
 /* Detectar IP del servidor y sugerir subred /24 */
 $ip_servidor = $_SERVER["SERVER_ADDR"] ?? "";
@@ -31,6 +94,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             if (!empty($matches[1])) {
                 foreach ($matches[1] as $ip) {
                     $ip_segura = $conn->real_escape_string($ip);
+                    $nombre_detectado = obtenerNombreDetectado($ip);
+
                     $sql = "SELECT id, nombre FROM equipos WHERE ip = '$ip_segura' LIMIT 1";
                     $res = $conn->query($sql);
 
@@ -40,6 +105,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                             "ip" => $ip,
                             "registrado" => true,
                             "nombre" => $fila["nombre"],
+                            "nombre_detectado" => $nombre_detectado,
                             "id" => $fila["id"]
                         ];
                     } else {
@@ -47,6 +113,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                             "ip" => $ip,
                             "registrado" => false,
                             "nombre" => null,
+                            "nombre_detectado" => $nombre_detectado,
                             "id" => null
                         ];
                     }
@@ -98,6 +165,7 @@ include("header.php");
         <table>
             <tr>
                 <th>IP detectada</th>
+                <th>Nombre detectado</th>
                 <th>Estado en la plataforma</th>
                 <th>Nombre asociado</th>
                 <th>Acción</th>
@@ -108,23 +176,27 @@ include("header.php");
                 foreach ($resultados as $item) {
                     echo "<tr>";
                     echo "<td>" . htmlspecialchars($item["ip"]) . "</td>";
+                    echo "<td>" . htmlspecialchars($item["nombre_detectado"]) . "</td>";
 
                     if ($item["registrado"]) {
                         echo "<td><span class='badge ok'>Registrado</span></td>";
                         echo "<td>" . htmlspecialchars($item["nombre"]) . "</td>";
-                        echo "<td><a class='btn-sm btn-edit' href='editar_equipo.php?id=" . $item["id"] . "'>Ver / Editar</a></td>";
+                        echo "<td><a class='btn-sm btn-edit' href='editar_equipo.php?id=" . urlencode($item["id"]) . "'>Ver / Editar</a></td>";
                     } else {
                         echo "<td><span class='badge warn'>Nuevo</span></td>";
                         echo "<td>No registrado</td>";
-                        echo "<td><a class='btn-sm btn-monitor' href='agregar_equipo_descubierto.php?ip=" . urlencode($item["ip"]) . "'>Agregar</a></td>";
+
+                        $nombre_param = ($item["nombre_detectado"] !== "No detectado") ? $item["nombre_detectado"] : "";
+
+                        echo "<td><a class='btn-sm btn-monitor' href='agregar_equipo_descubierto.php?ip=" . urlencode($item["ip"]) . "&nombre=" . urlencode($nombre_param) . "'>Agregar</a></td>";
                     }
 
                     echo "</tr>";
                 }
             } elseif (!empty($rango)) {
-                echo "<tr><td colspan='4'>No se detectaron hosts activos en el rango indicado.</td></tr>";
+                echo "<tr><td colspan='5'>No se detectaron hosts activos en el rango indicado.</td></tr>";
             } else {
-                echo "<tr><td colspan='4'>Aún no se ha ejecutado ningún escaneo.</td></tr>";
+                echo "<tr><td colspan='5'>Aún no se ha ejecutado ningún escaneo.</td></tr>";
             }
             ?>
         </table>

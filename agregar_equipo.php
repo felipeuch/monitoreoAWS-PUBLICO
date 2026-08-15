@@ -2,7 +2,6 @@
 include("conexion.php");
 include("verificar_sesion.php");
 include("bitacora_funciones.php");
-$mensaje = "";
 
 $mensaje = "";
 $errores = [];
@@ -16,8 +15,13 @@ $descripcion = "";
 $metricas_habilitadas = 0;
 $instancia_metricas = "";
 
+/* Recibir datos prellenados desde descubrir_equipos.php */
 if (isset($_GET["ip"]) && $_GET["ip"] !== "") {
     $ip = trim($_GET["ip"]);
+}
+
+if (isset($_GET["nombre"]) && $_GET["nombre"] !== "" && $_GET["nombre"] !== "No detectado") {
+    $nombre = trim($_GET["nombre"]);
 }
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
@@ -103,7 +107,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     }
 }
 
-
 include("header.php");
 ?>
 
@@ -146,8 +149,9 @@ include("header.php");
 
                 <label>Dirección IP</label>
                 <input type="text" id="ip" name="ip" required value="<?php echo htmlspecialchars($ip); ?>" placeholder="Ejemplo: 172.31.46.87" <?php echo isset($_GET["ip"]) && $_GET["ip"] !== "" ? "readonly" : ""; ?>>
+
                 <label>Ubicación</label>
-                <input type="text" name="ubicacion" value="<?php echo htmlspecialchars($ubicacion); ?>" placeholder="Ejemplo:Sala de servidores">
+                <input type="text" name="ubicacion" value="<?php echo htmlspecialchars($ubicacion); ?>" placeholder="Ejemplo: Sala de servidores">
 
                 <label>Tipo de equipo</label>
                 <input type="text" name="tipo" value="<?php echo htmlspecialchars($tipo); ?>" placeholder="Ejemplo: Servidor">
@@ -156,15 +160,16 @@ include("header.php");
                 <input type="text" name="sistema_operativo" value="<?php echo htmlspecialchars($sistema_operativo); ?>" placeholder="Linux, Windows">
 
                 <label>Descripción</label>
-                <textarea name="descripcion" placeholder="Ejemplo: Instancia principal de monitoreo" ><?php echo htmlspecialchars($descripcion); ?></textarea>
+                <textarea name="descripcion" placeholder="Ejemplo: Instancia principal de monitoreo"><?php echo htmlspecialchars($descripcion); ?></textarea>
                  
                 <label style="margin-top:16px;">
-                <input type="checkbox" id="metricas_habilitadas" name="metricas_habilitadas" value="1" <?php echo $metricas_habilitadas ? "checked" : ""; ?>>
-                Habilitar métricas para este equipo
+                    <input type="checkbox" id="metricas_habilitadas" name="metricas_habilitadas" value="1" <?php echo $metricas_habilitadas ? "checked" : ""; ?>>
+                    Habilitar métricas para este equipo
                 </label>                    
 
                 <label>Instancia de métricas</label>
                 <input type="text" id="instancia_metricas" name="instancia_metricas" value="<?php echo htmlspecialchars($instancia_metricas); ?>" placeholder="Ejemplo: 192.168.1.10:9100">
+
                 <button type="submit" class="btn btn-primary">Guardar equipo</button>
           </form>
         </div>
@@ -202,7 +207,6 @@ document.addEventListener("DOMContentLoaded", function () {
     const inputIp = document.getElementById("ip");
     const inputInstancia = document.getElementById("instancia_metricas");
 
-    // Detecta si la IP venía prellenada desde descubrir_equipos.php
     const ipVeniaPrellenada = inputIp.hasAttribute("readonly");
 
     function actualizarInstanciaMetricas() {
@@ -210,20 +214,12 @@ document.addEventListener("DOMContentLoaded", function () {
 
         if (chkMetricas.checked && ip !== "") {
             inputInstancia.value = ip + ":9100";
-
-            // Bloquea la IP
             inputIp.readOnly = true;
-
-            // Bloquea la instancia para que no la puedan borrar
             inputInstancia.readOnly = true;
         } else {
-            // Limpia la instancia si se desmarca métricas
             inputInstancia.value = "";
-
-            // Permite editar la instancia nuevamente
             inputInstancia.readOnly = false;
 
-            // Solo permite editar la IP si NO venía bloqueada desde descubrir equipos
             if (!ipVeniaPrellenada) {
                 inputIp.readOnly = false;
             }
@@ -238,4 +234,3 @@ document.addEventListener("DOMContentLoaded", function () {
 </script>
 
 <?php include("footer.php"); ?>
-        
